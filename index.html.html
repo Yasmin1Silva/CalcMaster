@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title> Sistema Escolar </title>
+        <style>
+            body {
+                font-family: Arial;
+                background: #000;
+                color: #fff;
+                text-align: center;
+            }
+            .menu {
+                background: #111;
+                padding: 10px;
+            }
+
+            .menu button {
+                margin: 5px;
+            }
+
+            /* TELAS */
+            .tela {
+                display: none;
+            }
+
+            .ativa {
+                display: block;
+            }
+
+            /* ANIMAÇÃO DE ENTRADA */
+            .container {
+                background: #111;
+                padding: 20px;
+                border-radius: 10px;
+                width: 320px;
+                margin: auto;
+                margin-top: 80px;
+                box-shadow: 0 0 10px rgba(255,255,255,0.1);
+
+                animation: aparecer 1s ease;
+            }
+
+            @keyframes aparecer {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* INPUT ANIMADO */
+            input {
+                margin: 5px;
+                padding: 8px;
+                width: 85%;
+                background: #000;
+                color: #fff;
+                border: 1px solid #333;
+                transition: 0.3s;
+            }
+
+            input:focus {
+                border: 1px solid #fff;
+                transform: scale(1.05);
+            }
+
+            /* BOTÃO ANIMADO */
+            button {
+                padding: 10px;
+                margin: 5px;
+                background: #fff;
+                color: #000;
+                border: none;
+                cursor: pointer;
+                font-weight: bold;
+                transition: 0.3s;
+            }
+
+            button:hover {
+                background: #ccc;
+                transform: scale(1.1);
+            }
+
+            /* ANIMAÇÃO DE APROVADO */
+            @keyframes aprovadoAnim {
+                0% {
+                    transform: scale(0.8);
+                    opacity: 0;
+                }
+                50% {
+                    transform: scale(1.1);
+                }
+                100% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+            }
+
+            .aprovado {
+                color: #00ff88;
+                animation: aprovadoAnim 0.6s ease;
+            }
+
+            /* ANIMAÇÃO DE REPROVADO (TREMIDA) */
+            @keyframes tremida {
+                0% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                50% { transform: translateX(5px); }
+                75% { transform: translateX(-5px); }
+                100% { transform: translateX(0); }
+            }
+
+            .reprovado {
+                color: #ff4d4d;
+                animation: tremida 0.3s;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="menu">
+            <button onclick="mostrarTela('media')">Média</button>
+            <button onclick="mostrarTela('eq1')">Equação 1º grau</button>
+            <button onclick="mostrarTela('eq2')">Equação 2º grau</button>
+        </div>
+
+        <!-- Informar Notas 1, 2 e 3 e calcular média-->
+        <div id="media" class="tela ativa">
+            <div class="container">
+                <h2>Sistema Escolar </h2>
+
+                <!-- Nome do Aluno -->
+                <input type="text" id="nome" placeholder="Nome do aluno"> <br>
+
+                <!--Coletar Notas -->
+                <input type="number" id="n1" placeholder="Nota 1"> <br>
+                <input type="number" id="n2" placeholder="Nota 2"> <br>
+                <input type="number" id="n3" placeholder="Nota 3"> <br>
+            
+                <!-- Menu de opções -->
+                <button onclick="calcularMedia()">Calcular Média</button>
+                <button onclick="notaNecessaria()"> Nota para passar </button>
+
+                <!--Mostrar resultado-->
+                <p id="resultado"></p>
+            </div>
+        </div>  
+
+        <div id="eq1" class="tela">
+            <div class="container">
+                <h2>Equação do 1º grau</h2>
+
+                <input type="number" id="a1" placeholder="a"><br>
+                <input type="number" id="b1" placeholder="b"><br>
+
+                <button onclick="resolverEq1()">Resolver</button>
+
+                <p id="resEq1"></p>
+            </div>
+        </div>
+
+        <div id="eq2" class="tela">
+            <div class="container">
+                <h2>Equação do 2º grau</h2>
+
+                <input type="number" id="a2" placeholder="a"><br>
+                <input type="number" id="b2" placeholder="b"><br>
+                <input type="number" id="c2" placeholder="c"><br>
+
+                <button onclick="resolverEq2()">Resolver</button>
+
+                <p id="resEq2"></p>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+        <script>
+            //Faz aparecer Confete
+            function soltarConfete() {
+                confetti({
+                particleCount: 120,
+                spread: 70,
+                origin: { y: 0.6 }
+                });
+            }
+
+            //FUNÇÃO: calcular a média e situação
+            function calcularMedia() {
+                let nome = document.getElementById("nome").value;
+                let n1 = Number(document.getElementById("n1").value);
+                let n2 = Number(document.getElementById("n2").value);
+                let n3 = Number(document.getElementById("n3").value);
+
+                let media = (n1 + n2 + n3) / 3;
+
+                let resultado = document.getElementById("resultado");
+
+                // LIMPA animações anteriores
+                resultado.classList.remove("aprovado");
+                resultado.classList.remove("reprovado");
+
+                let status;
+
+                if(media >= 6){
+                    status = "Aprovado! ✅";
+                    resultado.classList.add("aprovado"); // aparece a frase verde
+                
+                    soltarConfete(); //soltará os Confetes
+
+                } else {
+                    status = "Reprovado! ❌";
+                    resultado.classList.add("reprovado"); //aparece a frase tremida
+                }
+
+                resultado.innerHTML =
+                    "Aluno: " + nome + "<br>" +
+                    "Média: " + media.toFixed(2) + "<br>" + 
+                    status;
+            }
+
+            //FUNÇÃO: calcular nota necessaria
+            function notaNecessaria() {
+                let nome = document.getElementById("nome").value;
+                let n1 = Number(document.getElementById("n1").value);
+                let n2 = Number(document.getElementById("n2").value);
+
+                let notaFalta = 18 - (n1 + n2);
+
+                document.getElementById("resultado").classList.add("mostrar");
+
+                if(notaFalta <= 0) {
+                    document.getElementById("resultado").innerHTML = 
+                    "Aluno: " + nome + "<br> Já está aprovado!";
+                } else if(notaFalta > 10) {
+                    document.getElementById("resultado").innerHTML = 
+                    "Aluno: " + nome + "<br>Não é possível atingir a média...";
+                } else {
+                    document.getElementById("resultado").innerHTML =
+                    "Aluno: " + nome + "<br>Precisa tirar: " + notaFalta.toFixed(2);
+                }
+            }
+            // TROCAR TELAS
+            function mostrarTela(id) {
+                let telas = document.querySelectorAll(".tela");
+                telas.forEach(t => t.classList.remove("ativa"));
+
+                document.getElementById(id).classList.add("ativa");
+            }
+
+            // EQUAÇÃO DO 1º GRAU
+            function resolverEq1() {
+                let a = Number(document.getElementById("a1").value);
+                let b = Number(document.getElementById("b1").value);
+
+                if(a == 0) {
+                    document.getElementById("resEq1").innerHTML = "Não é válido!";
+                    return;
+                }
+
+                let x = -b / a;
+
+                document.getElementById("resEq1").innerHTML =
+                    "Equação: " + a + "x + " + b + " = 0<br>" +
+                    "Resultado: x = " + x.toFixed(2);
+            }
+
+            // EQUAÇÃO DO 2º GRAU
+            function resolverEq2() {
+                let a = Number(document.getElementById("a2").value);
+                let b = Number(document.getElementById("b2").value);
+                let c = Number(document.getElementById("c2").value);
+
+                let delta = (b*b) - (4*a*c);
+
+                if(delta < 0) {
+                    document.getElementById("resEq2").innerHTML =
+                        "Não existem raízes reais";
+                    return;
+                }
+
+                let x1 = (-b + Math.sqrt(delta)) / (2*a);
+                let x2 = (-b - Math.sqrt(delta)) / (2*a);
+
+                document.getElementById("resEq2").innerHTML =
+                    "x1 = " + x1.toFixed(2) + "<br>" +
+                    "x2 = " + x2.toFixed(2);
+            }
+        </script>
+    </body> 
+</html>
