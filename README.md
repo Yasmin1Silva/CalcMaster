@@ -2,6 +2,9 @@
 
 > Sistema Web de Apoio Acadêmico para Matemática Aplicada à Computação
 
+🌐 **Acesse o site:**  
+👉 https://calcmaster.gamer.gd/?i=1
+
 ![Status](https://img.shields.io/badge/status-concluído-brightgreen)
 ![Projeto](https://img.shields.io/badge/projeto-acadêmico-orange)
 
